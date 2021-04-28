@@ -2,12 +2,12 @@
   <div
     class="sidebar__chat"
     @click="getCurrentChat(user)"
-    v-if="user.uid !== $store.state.user.currentUser.uid"
+    v-if="user.number !== $store.state.user.currentUser.number"
   >
-    <v-avatar icon><v-img :src="user.photoURL"></v-img></v-avatar>
+    <v-avatar icon><v-img :src="user.profile"></v-img></v-avatar>
     <div class="sidebar__chat_info">
-      <h2>{{ user.displayName }}</h2>
-      <p>Hey there, I'm using Whatsa...</p>
+      <h2>{{ user.name }}</h2>
+      <p class="mb-0">{{ user.last_chat }}</p>
     </div>
   </div>
 </template>
@@ -19,20 +19,12 @@ export default {
   methods: {
     async getCurrentChat(user) {
       this.$store.dispatch("SET_CURRENT_CHAT", user);
-      
-      const conversationId =
-        this.$store.state.user.currentUser.uid >
-        this.$store.state.chat.currentChat.uid
-          ? this.$store.state.user.currentUser.uid +
-            this.$store.state.chat.currentChat.uid
-          : this.$store.state.chat.currentChat.uid +
-            this.$store.state.user.currentUser.uid;
-
-      this.$store.dispatch("SET_CHAT_MESSAGES", conversationId);
+      this.$store.dispatch("SET_CHAT_MESSAGES", user.number);
     },
   },
 };
 </script>
+
 <style scoped>
 .sidebar__chat {
   display: flex;

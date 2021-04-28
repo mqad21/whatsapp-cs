@@ -4,15 +4,18 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
+import axios from "./plugins/axios";
 import firebaseConfig from "@/config/firebase";
-import firebase from "firebase/app";
+// import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/analytics";
 
 Vue.config.productionTip = false;
-firebase.initializeApp(firebaseConfig);
-firebase.analytics();
+// firebase.initializeApp(firebaseConfig);
+// firebase.analytics();
+
+Vue.prototype.$axios = axios;
 
 new Vue({
   router,
