@@ -1,7 +1,7 @@
 export interface ShortUser {
-  uid: string;
-  displayName: string;
-  email: string;
-  photoURL: string;
-  phoneNumber: string;
+  id: string;
+  profil: string;
+  last_chat: string;
+  name: string;
+  number: string;
 }

@@ -5,7 +5,6 @@
         <v-list-item-avatar class="mr-3">
           <v-img src="https://thispersondoesnotexist.com/image" />
         </v-list-item-avatar>
-
         <v-list-item-content>
           <v-list-item-title>John Doe</v-list-item-title>
           <v-list-item-subtitle>Admin 1</v-list-item-subtitle>
@@ -20,36 +19,41 @@
         </div>
       </div>
     </div>
-    <!-- <div class="sidebar__search">
-      <div class="sidebar__search_container">
-        <v-btn icon><v-icon>mdi-magnify</v-icon></v-btn>
-        <input type="text" placeholder="Search or start a new chat" />
-      </div>
-    </div> -->
-    <div class="sidebar__chats">
-      <v-tabs v-model="tab" background-color="transparent" color="basil" grow>
-        <v-tab v-for="status in statuses" :key="status.title">
-          <v-badge
-            color="success"
-            v-if="status.count"
-            :content="status.count"
-            inline
-            >{{ status.title }}</v-badge
-          >
-          <span v-else>{{ status.title }}</span>
-        </v-tab>
-      </v-tabs>
-
-      <v-tabs-items v-model="tab">
+    <v-tabs
+      class="fixed-tabs-bar"
+      v-model="tab"
+      background-color="white"
+      color="basil"
+      grow
+    >
+      <v-tab v-for="status in statuses" :key="status.title">
+        <v-badge
+          color="success"
+          v-if="status.users.length"
+          :content="status.users.length"
+          inline
+          >{{ status.title }}</v-badge
+        >
+        <span v-else>{{ status.title }}</span>
+      </v-tab>
+    </v-tabs>
+    <v-tabs-items class="sidebar__chats__container" v-model="tab">
+      <div class="sidebar__chats">
         <v-tab-item v-for="status in statuses" :key="status.title">
-          <SideBarChat
-            v-for="(user, index) in status.users"
-            :key="index"
-            :user="user"
-          />
+          <template v-if="status.users.length">
+            <SideBarChat
+              v-for="(user, index) in status.users"
+              :key="index"
+              :user="user"
+              :pending="status.title == 'Pending'"
+            />
+          </template>
+          <template v-else>
+            <SideBarChat no-chat />
+          </template>
         </v-tab-item>
-      </v-tabs-items>
-    </div>
+      </div>
+    </v-tabs-items>
   </div>
 </template>
 
@@ -68,18 +72,29 @@ export default {
     };
   },
   computed: {
-    ...mapState({ currentUser: (state) => state.user.currentUser }),
+    ...mapState({
+      currentUser: (state) => state.user.currentUser,
+      category: (state) => state.category.category,
+    }),
     statuses() {
       return [
         {
           title: "Aktif",
-          count: this.$store.state.chat.activeChatUsers.length,
-          users: this.$store.state.chat.activeChatUsers,
+          users: this.$store.state.chat.activeChatUsers.filter((item) => {
+            if (this.category && this.category != "0") {
+              return item.kategori_id == this.category;
+            }
+            return item;
+          }),
         },
         {
           title: "Pending",
-          count: this.$store.state.chat.pendingChatUsers.length,
-          users: this.$store.state.chat.pendingChatUsers,
+          users: this.$store.state.chat.pendingChatUsers.filter((item) => {
+            if (this.category && this.category != "0") {
+              return item.kategori_id == this.category;
+            }
+            return item;
+          }),
         },
       ];
     },
@@ -95,6 +110,7 @@ export default {
 <style scoped>
 .sidebar {
   flex: 0.35;
+  min-width: 360px;
 }
 
 .sidebar__header {
@@ -133,11 +149,15 @@ export default {
   margin-left: 10px;
 }
 
+.sidebar__chats__container {
+  overflow: auto;
+  height: calc(100% - 128px);
+  overflow: auto;
+}
+
 .sidebar__chats {
   flex: 1;
-  overflow-y: auto;
   background-color: white;
-  height: calc(100% - 139px);
 }
 
 .dropdown {
@@ -152,7 +172,7 @@ export default {
   min-width: 100px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   padding: 12px 16px;
-  z-index: 1;
+  z-index: 2;
 }
 
 .dropdown:hover .dropdown-content {

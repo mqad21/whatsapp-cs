@@ -1,8 +1,8 @@
 export interface Chat {
-  id: number;
-  message: string;
-  date: string;
-  time: string;
+  id: string;
+  body: string;
+  ack: string;
+  fromMe: boolean;
   timestamp: number;
-  senderId: string;
+  type: string;
 }

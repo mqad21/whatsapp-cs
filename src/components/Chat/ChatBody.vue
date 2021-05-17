@@ -84,6 +84,7 @@ export default {
   padding: 30px;
   padding-bottom: 0;
   overflow: auto;
+  position: relative;
 }
 
 .chat__message {
@@ -95,6 +96,7 @@ export default {
   min-width: 70px;
   width: fit-content;
   margin-bottom: 30px;
+  white-space: pre-line;
 }
 
 .chat__message .chat__content {

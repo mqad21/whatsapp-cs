@@ -51,10 +51,7 @@ export default {
           if (result.status) {
             this.src = result.data.url;
           } else {
-            this.$store.dispatch("SET_SNACKBAR", {
-              showing: true,
-              text: result.message,
-            });
+            throw result.message;
           }
         })
         .catch((e) => {
@@ -86,5 +83,8 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>

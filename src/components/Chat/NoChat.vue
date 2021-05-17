@@ -20,6 +20,7 @@
   flex: 0.65;
   margin: auto;
   text-align: center;
+  padding: 2rem;
 }
 
 .no__chat_selected_text {

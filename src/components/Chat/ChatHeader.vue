@@ -6,7 +6,7 @@
       <p class="mb-0">{{ currentChat.number }}</p>
     </div>
     <div class="chat__header_right">
-      <v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
+      <v-btn icon @click="$store.commit('TOGGLE_PROFILE')"><v-icon>mdi-dots-vertical</v-icon></v-btn>
     </div>
   </div>
 </template>

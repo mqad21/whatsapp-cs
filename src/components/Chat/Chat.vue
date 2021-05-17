@@ -3,7 +3,7 @@
   <div class="chat" v-else>
     <ChatHeader :current-chat="currentChat" />
     <ChatBody />
-    <ChatFooter />
+    <ChatFooter :current-chat="currentChat" />
   </div>
 </template>
 
@@ -20,7 +20,7 @@ export default {
     NoChat,
     ChatHeader,
     ChatBody,
-    ChatFooter
+    ChatFooter,
   },
   computed: {
     ...mapState({ currentChat: (state) => state.chat.currentChat }),

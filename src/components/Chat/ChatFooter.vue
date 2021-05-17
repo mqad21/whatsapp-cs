@@ -1,77 +1,83 @@
 <template>
-  <div class="chat__footer">
-    <emoji-picker @emoji="append" :search="search">
-      <v-btn
-        icon
-        class="emoji-invoker"
-        slot="emoji-invoker"
-        slot-scope="{ events: { click: clickEvent } }"
-        @click.stop="clickEvent"
-        ><v-icon>mdi-emoticon-happy-outline</v-icon></v-btn
-      >
-
-      <div slot="emoji-picker" slot-scope="{ emojis, insert, display }">
-        <div
-          class="emoji-picker px-3"
-          :style="{ top: '61%', left: display.x + 'px' }"
+  <div>
+    <auto-text
+      v-if="autoText.length || loadingAutoText"
+      :auto-text="autoText"
+      v-on:update-message="updateMessage"
+      :loading="loadingAutoText"
+    />
+    <div class="chat__footer">
+      <emoji-picker @emoji="append" :search="search">
+        <v-btn
+          icon
+          class="emoji-invoker"
+          slot="emoji-invoker"
+          slot-scope="{ events: { click: clickEvent } }"
+          @click.stop="clickEvent"
         >
-          <div class="emoji-picker__search">
-            <v-text-field
-              class="mb-2"
-              hide-details
-              outlined
-              dense
-              type="text"
-              v-model="search"
-              v-focus
-            ></v-text-field>
-          </div>
-          <div>
-            <div v-for="(emojiGroup, category) in emojis" :key="category">
-              <h5>{{ category }}</h5>
-              <div class="emojis">
-                <span
-                  v-for="(emoji, emojiName) in emojiGroup"
-                  :key="emojiName"
-                  @click="insert(emoji)"
-                  :title="emojiName"
-                  >{{ emoji }}</span
-                >
+          <v-icon>mdi-emoticon-happy-outline</v-icon>
+        </v-btn>
+
+        <div slot="emoji-picker" slot-scope="{ emojis, insert, display }">
+          <div
+            class="emoji-picker px-3"
+            :style="{ top: '61%', left: display.x + 'px' }"
+          >
+            <div class="emoji-picker__search">
+              <v-text-field
+                class="mb-2"
+                hide-details
+                outlined
+                dense
+                type="text"
+                v-model="search"
+                v-focus
+              ></v-text-field>
+            </div>
+            <div>
+              <div v-for="(emojiGroup, category) in emojis" :key="category">
+                <h5>{{ category }}</h5>
+                <div class="emojis">
+                  <span
+                    v-for="(emoji, emojiName) in emojiGroup"
+                    :key="emojiName"
+                    @click="insert(emoji)"
+                    :title="emojiName"
+                  >
+                    {{ emoji }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </emoji-picker>
-    <v-form @submit.prevent="submit">
-      <v-textarea
-        class="ma-2"
-        hide-details
-        rows="1"
-        placeholder="Masukkan pesan"
-        v-model="message"
-        solo
-        flat
-        auto-grow
-      >
-      </v-textarea>
-      <v-btn class="mr-2 my-auto" icon @click="submit">
-        <v-icon>mdi-send</v-icon>
-      </v-btn>
-    </v-form>
+      </emoji-picker>
+      <ChatInput :submit="submit" v-model="message" />
+    </div>
   </div>
 </template>
 
 <script>
 import EmojiPicker from "vue-emoji-picker";
+import ChatInput from "@/components/Chat/ChatInput";
+import AutoText from "./AutoText.vue";
+import { mapState } from "vuex";
 
 export default {
+  props: ["currentChat"],
   components: {
     EmojiPicker,
+    ChatInput,
+    AutoText,
   },
   data: () => ({
     message: "",
+    search: "",
+    loadingAutoText: false,
   }),
+  computed: {
+    ...mapState({ autoText: (state) => state.chat.autoText }),
+  },
   methods: {
     append(emoji) {
       this.message += emoji;
@@ -80,28 +86,22 @@ export default {
       if (this.message === null || this.message === " ") {
         return;
       }
-      const now = new Date();
-      let hours = now.getHours();
-      let minutes = now.getMinutes();
-      const ampm = hours >= 12 ? "pm" : "am";
-      hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      const strTime = hours + ":" + minutes + " " + ampm;
-      const chat = {
-        id: +new Date(),
-        date: now.toISOString().substr(0, 10),
-        time: strTime,
-        timestamp: +new Date(),
-        message: this.message,
-        senderId: this.$store.state.user.currentUser.uid,
-        receiverId: this.$store.state.chat.currentChat.uid,
+      const newMessage = {
+        id: new Date().getTime().toString(),
+        fromMe: true,
+        body: this.message,
+        ack: "0",
+        type: "chat",
+        timestamp: new Date().getTime(),
       };
-      this.$store.dispatch("UPDATE_CHAT_MESSAGES", {
-        chat: chat,
-        id: this.$store.state.chat.conversationId,
+      this.$store.dispatch("SEND_CHAT_MESSAGE", {
+        message: newMessage,
+        number: this.currentChat.number,
       });
       this.message = "";
+    },
+    updateMessage(message) {
+      this.message = message;
     },
   },
   directives: {
@@ -109,6 +109,23 @@ export default {
       inserted(el) {
         el.focus();
       },
+    },
+  },
+  watch: {
+    message(value) {
+      if (value.charAt(0) == "/") {
+        const query = value.substring(1);
+        if (query) {
+          this.loadingAutoText = true;
+          this.$store.dispatch("SET_AUTO_TEXT", query).then(() => {
+            this.loadingAutoText = false;
+          });
+        } else {
+          this.$store.commit("REMOVE_AUTO_TEXT");
+        }
+      } else {
+        this.$store.commit("REMOVE_AUTO_TEXT");
+      }
     },
   },
 };

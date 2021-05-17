@@ -1,6 +1,8 @@
 <template>
   <div class="app v-application" data-app>
     <Snackbar />
+    <CekOngkir />
+    <AddCategory />
     <Header />
     <v-dialog
       max-width="80vw"
@@ -12,6 +14,7 @@
     <div class="app__body" v-if="isLoggedIn">
       <SideBar />
       <Chat />
+      <Profile v-if="$store.state.profile.show" />
     </div>
     <Login v-else />
   </div>
@@ -21,6 +24,9 @@
 import Vue from "vue";
 import Header from "@/components/Header.vue";
 import SideBar from "@/components/SideBar.vue";
+import Profile from "@/components/Profile";
+import CekOngkir from "@/components/CekOngkir/CekOngkir.vue";
+import AddCategory from "@/components/Category/AddCategory.vue";
 import Chat from "@/components/Chat/Chat.vue";
 import Login from "@/components/Auth/SSO.vue";
 import { mapState } from "vuex";
@@ -33,10 +39,13 @@ export default Vue.extend({
   },
   components: {
     SideBar,
+    Profile,
     Chat,
     Login,
     Header,
     Snackbar,
+    CekOngkir,
+    AddCategory,
   },
 });
 </script>
