@@ -38,6 +38,11 @@ export default {
         payload
       ];
     },
+    REMOVE_CHAT_MESSAGES(state: { chatMessages: any }, payload: string) {
+      state.chatMessages = state.chatMessages.filter(function (chat: Chat) {
+        return chat.id != payload;
+      });
+    },
     UPDATE_ACK_MESSAGE(state: { chatMessages: any }, payload: string) {
       const targetIndex = state.chatMessages.findIndex(function (item: Chat) {
         return item.id == payload;
@@ -63,6 +68,11 @@ export default {
         payload,
         ...state.activeChatUsers,
       ];
+    },
+    REMOVE_ACTIVE_CHAT(state: { activeChatUsers: any }, payload: ShortUser) {
+      state.activeChatUsers = state.activeChatUsers.filter(function (user: ShortUser) {
+        return user.id != payload.id;
+      });
     },
     SET_AUTO_TEXT(state: { autoText: [] }, payload: []) {
       state.autoText = payload;
@@ -95,7 +105,24 @@ export default {
         .catch(e => console.error(e));
     },
     SET_CURRENT_CHAT({ commit }: any, payload: ShortUser) {
+      payload.note = [];
       commit("SET_CURRENT_CHAT", payload);
+      axios("cs/note", { params: { number: payload.number } })
+        .then(response => response.data)
+        .then(result => {
+          if (!result.status) {
+            throw "Gagal mendapatkan catatan";
+          }
+          if (result.data.every(function (item: any) {
+            return item != null && item != 'null'
+          })) {
+            payload.note = result.data;
+          }
+          commit("SET_CURRENT_CHAT", payload);
+        })
+        .catch(e => {
+          console.error(e);
+        })
       commit("CLOSE_PROFILE");
     },
     SET_CHAT_MESSAGES({ commit }: any, payload: string) {
@@ -117,10 +144,11 @@ export default {
           console.error(e);
         })
     },
-    SEND_CHAT_MESSAGE({ commit, dispatch }: any, payload: { message: Chat; number: string }) {
+    SEND_CHAT_MESSAGE({ commit }: any, payload: { message: Chat; number: string; file: File }) {
       const formData = new FormData();
       formData.append('number', payload.number);
       formData.append('text', payload.message.body);
+      if (payload.file) formData.append('file', payload.file);
       axios.post("cs/send", formData)
         .then(response => response.data)
         .then(result => {
@@ -130,19 +158,11 @@ export default {
             throw result.msg;
           }
         }).catch(e => {
+          commit("REMOVE_CHAT_MESSAGES", payload.message.id);
           commit("SET_SNACKBAR", { showing: true, text: e });
           console.error(e);
         });
       commit("UPDATE_CHAT_MESSAGES", payload.message);
-    },
-    UPDATE_CHAT_MESSAGES({ commit }: any, payload: { chat: Chat; id: string }) {
-      // firebase
-      //   .firestore()
-      //   .collection("chats")
-      //   .doc(payload.id)
-      //   .collection("messages")
-      //   .add(payload.chat);
-      // commit("UPDATE_CHAT_MESSAGES", payload.chat);
     },
     SET_FULLSCREEN_MEDIA({ commit }: any, payload: FullscrenMedia) {
       commit("SET_FULLSCREEN_MEDIA", payload)
@@ -156,6 +176,21 @@ export default {
           if (result.status) {
             commit("REMOVE_PENDING_CHAT", payload);
             commit("APPEND_ACTIVE_CHAT", payload);
+          } else {
+            throw result.message;
+          }
+        })
+        .catch(e => commit("SET_SNACKBAR", { showing: true, text: e }));
+    },
+    END_CHAT({ commit }: any, payload: ShortUser) {
+      const formData = new FormData();
+      formData.append('id', payload.id);
+      axios.post("cs/selesai", formData)
+        .then(response => response.data)
+        .then(result => {
+          if (result.status) {
+            commit("REMOVE_ACTIVE_CHAT", payload);
+            commit("SET_CURRENT_CHAT", null);
           } else {
             throw result.message;
           }

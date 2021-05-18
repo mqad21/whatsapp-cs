@@ -4,4 +4,5 @@ export interface ShortUser {
   last_chat: string;
   name: string;
   number: string;
+  note: Array<any>;
 }

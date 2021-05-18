@@ -34,6 +34,7 @@ export default Vue.extend({
     this.$store.dispatch("SET_ACTIVE_CHAT_USERS");
     this.$store.dispatch("SET_PENDING_CHAT_USERS");
     this.$store.dispatch("SET_CATEGORIES");
+    this.$store.dispatch("SET_CS");
     // }
     // });
   },

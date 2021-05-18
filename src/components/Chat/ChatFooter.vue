@@ -6,6 +6,7 @@
       v-on:update-message="updateMessage"
       :loading="loadingAutoText"
     />
+    <file-container v-if="file" :file="file" v-on:remove-file="removeFile" />
     <div class="chat__footer">
       <emoji-picker @emoji="append" :search="search">
         <v-btn
@@ -17,7 +18,6 @@
         >
           <v-icon>mdi-emoticon-happy-outline</v-icon>
         </v-btn>
-
         <div slot="emoji-picker" slot-scope="{ emojis, insert, display }">
           <div
             class="emoji-picker px-3"
@@ -52,6 +52,14 @@
           </div>
         </div>
       </emoji-picker>
+      <div>
+        <v-file-input
+          v-model="file"
+          hide-input
+          hide-details
+          class="mt-0 pt-0 px-1"
+        />
+      </div>
       <ChatInput :submit="submit" v-model="message" />
     </div>
   </div>
@@ -61,6 +69,7 @@
 import EmojiPicker from "vue-emoji-picker";
 import ChatInput from "@/components/Chat/ChatInput";
 import AutoText from "./AutoText.vue";
+import FileContainer from "./FileContainer.vue";
 import { mapState } from "vuex";
 
 export default {
@@ -69,10 +78,12 @@ export default {
     EmojiPicker,
     ChatInput,
     AutoText,
+    FileContainer,
   },
   data: () => ({
     message: "",
     search: "",
+    file: "",
     loadingAutoText: false,
   }),
   computed: {
@@ -91,17 +102,23 @@ export default {
         fromMe: true,
         body: this.message,
         ack: "0",
-        type: "chat",
+        type: this.file ? "media" : "chat",
         timestamp: new Date().getTime(),
       };
-      this.$store.dispatch("SEND_CHAT_MESSAGE", {
+      const message = {
         message: newMessage,
         number: this.currentChat.number,
-      });
+        file: this.file,
+      };
+      this.$store.dispatch("SEND_CHAT_MESSAGE", message);
       this.message = "";
+      this.file = "";
     },
     updateMessage(message) {
       this.message = message;
+    },
+    removeFile() {
+      this.file = "";
     },
   },
   directives: {

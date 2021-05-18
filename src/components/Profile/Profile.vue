@@ -8,16 +8,20 @@
       </v-col>
     </v-row>
     <v-row justify="center" class="mt-4">
-      <v-col v-if="$store.state.profile.editable" cols="auto">
+      <v-col
+        v-click-outside="closeEditable"
+        v-if="$store.state.profile.editable"
+        cols="auto"
+      >
         <v-row align="center">
           <v-col class="pr-0">
-            <v-text-field v-model="currentChat.name" />
+            <v-text-field v-model="name" />
           </v-col>
           <v-col cols="auto" class="pl-0">
             <v-btn
               @click="
                 $store.dispatch('CHANGE_NAME', {
-                  name: currentChat.name,
+                  name,
                   number: currentChat.number,
                 })
               "
@@ -43,6 +47,11 @@
           </v-icon>
         </p>
       </v-col>
+      <v-col cols="12" class="pa-0">
+        <p class="text-caption text-center mb-0" v-if="currentChat.note.length">
+          Note: {{ currentChat.note.join(" | ") }}
+        </p>
+      </v-col>
       <v-col cols="8">
         <v-select
           label="Pilih Kategori"
@@ -52,17 +61,29 @@
         >
         </v-select>
       </v-col>
+      <v-col cols="8">
+        <v-btn color="success" block @click="$store.commit('TOGGLE_TRANSFER')">
+          Transfer
+        </v-btn>
+      </v-col>
+      <v-col cols="8">
+        <v-btn color="primary" block @click="endChat"> Selesai Chat </v-btn>
+      </v-col>
     </v-row>
+    <transfer />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import Transfer from "./Transfer.vue";
 
 export default {
+  components: { Transfer },
   data() {
     return {
       editable: false,
+      name: this.$store.state.chat.currentChat.name,
     };
   },
   computed: {
@@ -77,11 +98,14 @@ export default {
     },
   },
   methods: {
-    toggleEdit() {
-      this.editable = !this.editable;
+    closeEditable() {
+      if (this.$store.state.profile.editable) {
+        this.$store.commit("TOGGLE_EDITABLE");
+      }
     },
-    changeName() {
-      this.editable = !this.editable;
+    endChat() {
+      this.$store.dispatch("END_CHAT", this.currentChat);
+      this.$store.commit("TOGGLE_PROFILE");
     },
   },
   watch: {
