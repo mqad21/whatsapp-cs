@@ -83,7 +83,7 @@ export default {
   data: () => ({
     message: "",
     search: "",
-    file: "",
+    file: null,
     loadingAutoText: false,
   }),
   computed: {
@@ -112,7 +112,7 @@ export default {
       };
       this.$store.dispatch("SEND_CHAT_MESSAGE", message);
       this.message = "";
-      this.file = "";
+      this.file = null;
     },
     updateMessage(message) {
       this.message = message;
