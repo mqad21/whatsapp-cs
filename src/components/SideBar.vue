@@ -10,14 +10,6 @@
           <v-list-item-subtitle>Admin 1</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <div class="sidebar__header_right">
-        <div class="dropdown">
-          <v-btn icon><v-icon>mdi-dots-vertical</v-icon></v-btn>
-          <div class="dropdown-content">
-            <p class="mb-0" @click="logout">Logout</p>
-          </div>
-        </div>
-      </div>
     </div>
     <v-tabs
       class="fixed-tabs-bar"

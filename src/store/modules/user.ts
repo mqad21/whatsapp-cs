@@ -1,12 +1,13 @@
-// import firebase from "firebase";
 import { ShortUser } from "@/models/short_user";
-
-// const GOOGLE_AUTH_PROVIDER = new firebase.auth.GoogleAuthProvider();
+import axios from "@/plugins/axios";
+import router from "@/router";
 
 export default {
   state: {
     currentUser: null,
     isLoggedIn: false,
+    isInvalid: false,
+    invalidMessage: ""
   },
   mutations: {
     SET_USER(
@@ -18,42 +19,35 @@ export default {
     SET_LOGGED_IN(state: { isLoggedIn: boolean }, payload: boolean) {
       state.isLoggedIn = payload;
     },
+    SET_INVALID(state: { isInvalid: boolean }) {
+      state.isInvalid = true;
+    },
+    SET_INVALID_MESSAGE(state: { invalidMessage: string }, payload: string) {
+      state.invalidMessage = payload;
+    },
   },
   actions: {
-    SET_USER({ commit }: any) {
-      // firebase
-      //   .auth()
-      //   .signInWithPopup(GOOGLE_AUTH_PROVIDER)
-      //   .then((user) => {
-      //     const currentUser = {
-      //       uid: user.user?.uid,
-      //       displayName: user.user?.displayName,
-      //       email: user.user?.email,
-      //       photoURL: user.user?.photoURL,
-      //       phoneNumber: user.user?.phoneNumber,
-      //     };
-
-      //     firebase
-      //       .firestore()
-      //       .collection("users")
-      //       .doc(user.user?.uid)
-      //       .set(currentUser);
-
-      //     commit("SET_USER", currentUser);
-      //     commit("SET_LOGGED_IN", true);
-      //   })
-      //   .catch((err) => {
-      //     commit("SET_SNACKBAR", {
-      //       showing: true,
-      //       text: err.message,
-      //       color: "error",
-      //     });
-      //   });
-    },
-    LOGOUT({ commit }: any) {
-      // firebase.auth().signOut();
-      // commit("SET_USER", null);
-      // commit("SET_LOGGED_IN", false);
+    CHECK_TOKEN({ commit, dispatch }: any) {
+      const token = router.currentRoute.query.token || localStorage.getItem('token');
+      axios.post("cs/check_token", { token })
+        .then(response => response.data)
+        .then(result => {
+          if (!result.status) {
+            throw result.message;
+          }
+          localStorage.setItem('token', token as string);
+          commit("SET_LOGGED_IN", true);
+          dispatch("SET_ACTIVE_CHAT_USERS");
+          dispatch("SET_PENDING_CHAT_USERS");
+          dispatch("SET_CATEGORIES");
+          dispatch("SET_CS");
+        })
+        .catch(e => {
+          console.error(e);
+          commit("SET_LOGGED_IN", false);
+          commit("SET_INVALID");
+          commit("SET_INVALID_MESSAGE", e);
+        });
     },
   },
 };

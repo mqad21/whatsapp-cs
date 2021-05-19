@@ -1,21 +1,23 @@
 <template>
   <div class="app v-application" data-app>
-    <Snackbar />
-    <CekOngkir />
-    <AddCategory />
-    <Header />
-    <v-dialog
-      max-width="80vw"
-      v-model="$store.state.chat.fullscreenMedia.showing"
-      transition="dialog-bottom-transition"
-    >
-      <v-img :src="$store.state.chat.fullscreenMedia.src" />
-    </v-dialog>
-    <div class="app__body" v-if="isLoggedIn">
-      <SideBar />
-      <Chat />
-      <Profile v-if="$store.state.profile.show" />
-    </div>
+    <template v-if="isLoggedIn">
+      <Snackbar />
+      <CekOngkir />
+      <AddCategory />
+      <Header />
+      <v-dialog
+        max-width="80vw"
+        v-model="$store.state.chat.fullscreenMedia.showing"
+        transition="dialog-bottom-transition"
+      >
+        <v-img :src="$store.state.chat.fullscreenMedia.src" />
+      </v-dialog>
+      <div class="app__body">
+        <SideBar />
+        <Chat />
+        <Profile v-if="$store.state.profile.show" />
+      </div>
+    </template>
     <Login v-else />
   </div>
 </template>
@@ -28,7 +30,7 @@ import Profile from "@/components/Profile/Profile.vue";
 import CekOngkir from "@/components/CekOngkir/CekOngkir.vue";
 import AddCategory from "@/components/Category/AddCategory.vue";
 import Chat from "@/components/Chat/Chat.vue";
-import Login from "@/components/Auth/SSO.vue";
+import Login from "@/components/Auth/Auth.vue";
 import { mapState } from "vuex";
 import Snackbar from "@/components/Snackbar.vue";
 
