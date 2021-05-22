@@ -15,7 +15,7 @@
       >
         <v-row justify="center" align="center">
           <v-col cols="12" class="px-lg-10">
-            <v-text-field v-model="name" hide-details />
+            <v-text-field v-model="name" hide-details/>
           </v-col>
           <v-col cols="12" class="px-lg-10 pt-0">
             <v-btn
@@ -91,7 +91,7 @@ export default {
   data() {
     return {
       editable: false,
-      name: this.$store.state.chat.currentChat.name,
+      name_: "",
     };
   },
   computed: {
@@ -103,6 +103,14 @@ export default {
           value: item.id,
         };
       });
+    },
+    name: {
+      get() {
+        return this.$store.state.chat.currentChat.name;
+      },
+      set(name) {
+        this.name = name;
+      },
     },
   },
   methods: {
@@ -134,5 +142,6 @@ export default {
   width: 300px;
   border-left: 0.1px solid lightgray;
   padding: 1rem;
+  overflow: auto;
 }
 </style>
