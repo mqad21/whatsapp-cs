@@ -30,13 +30,16 @@ export default {
     CHECK_TOKEN({ commit, dispatch }: any) {
       const token = router.currentRoute.query.token || localStorage.getItem('token');
       axios.post("cs/check_token", { token })
-        .then(response => response.data)
+        .then(response => {
+          localStorage.setItem('token', token as string);
+          return response.data;
+        })
         .then(result => {
           if (!result.status) {
             throw result.message;
           }
-          localStorage.setItem('token', token as string);
           commit("SET_LOGGED_IN", true);
+          commit("SET_USER", { name: result.data.email, profil: result.data.profile });
           dispatch("SET_ACTIVE_CHAT_USERS");
           dispatch("SET_PENDING_CHAT_USERS");
           dispatch("SET_CATEGORIES");

@@ -15,7 +15,7 @@
       <div class="app__body">
         <SideBar />
         <Chat />
-        <Profile v-if="$store.state.profile.show" />
+        <Profile v-show="$store.state.profile.show" />
       </div>
     </template>
     <Login v-else />

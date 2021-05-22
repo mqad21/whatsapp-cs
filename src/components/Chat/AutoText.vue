@@ -14,7 +14,7 @@
           @click="select(text)"
         >
           <v-list-item-content>
-            <v-list-item-title v-text="text"></v-list-item-title>
+            <v-list-item-title v-html="text"></v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>

@@ -1,27 +1,33 @@
 <template>
   <div class="sidebar__chat" @click="getCurrentChat(user)" v-if="!noChat">
-    <v-avatar icon><v-img :src="user.profile"></v-img></v-avatar>
-    <div class="sidebar__chat_info">
-      <h2>{{ user.name }}</h2>
-      <v-row v-if="pending" justify="space-between">
-        <v-col>
-          <p style="width: 220px" class="mb-0 text-truncate">
-            {{ user.last_chat }}
-          </p>
-        </v-col>
-        <v-col>
-          <v-btn
-            @click.stop="$store.dispatch('ACCEPT_CHAT', user)"
-            small
-            color="primary"
-            >Terima</v-btn
-          >
-        </v-col>
-      </v-row>
-      <p v-else style="width: 260px" class="mb-0 text-truncate">
-        {{ user.last_chat }}
-      </p>
-    </div>
+    <v-row>
+      <v-col cols="auto">
+        <v-avatar icon><v-img :src="user.profile"></v-img></v-avatar>
+      </v-col>
+      <v-col class="pl-0 sidebar__chat_info">
+        <v-row justify="space-between">
+          <v-col>
+            <h2>{{ user.name }}</h2>
+            <p class="mb-0 text-truncate">
+              {{ user.last_chat }}
+            </p>
+          </v-col>
+        </v-row>
+      </v-col>
+      <v-col cols="auto">
+        <v-row v-if="pending">
+          <v-col>
+            <v-btn
+              @click.stop="$store.dispatch('ACCEPT_CHAT', user)"
+              small
+              color="primary"
+            >
+              Terima
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
   </div>
   <div v-else>
     <p class="text-center pa-4 mt-4 font-italic">Tidak ada chat</p>
@@ -60,13 +66,18 @@ export default {
   padding: 15px 20px;
   cursor: pointer;
   border-bottom: 1px solid #f6f6f6;
+  width: 100%;
+}
+
+.timestamp {
+  opacity: 0.7;
 }
 
 .sidebar__chat:hover {
   background-color: #ebebeb;
 }
 
-.sidebar__chat_info > h2 {
+.sidebar__chat_info h2 {
   font-size: 16px;
   margin-bottom: 8px;
   width: 100%;

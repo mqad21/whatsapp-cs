@@ -210,6 +210,6 @@ export default {
             reject(e);
           })
       })
-    }
+    },
   },
 };

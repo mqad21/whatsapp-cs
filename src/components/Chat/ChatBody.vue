@@ -6,7 +6,7 @@
     <div v-else>
       <div
         class="first__time_chat"
-        v-if="$store.state.chat.chatMessages.length === 0"
+        v-if="$store.state.chat.loadingChat.length === 0"
       >
         <p>
           You have no conversation with
@@ -78,7 +78,7 @@ export default {
 
 .chat__body {
   flex: 1;
-  background-image: url("https://github-production-user-asset-6210df.s3.amazonaws.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+  background-image: url('~@/assets/images/chat-background.png');
   background-position: center;
   background-repeat: repeat;
   padding: 30px;
@@ -95,8 +95,11 @@ export default {
   background-color: #ffffff;
   min-width: 70px;
   width: fit-content;
+  max-width: 30rem;
+  /* max-width: 80%; */
   margin-bottom: 30px;
   white-space: pre-line;
+  word-wrap: break-word;
 }
 
 .chat__message .chat__content {

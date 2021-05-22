@@ -130,16 +130,13 @@ export default {
   },
   watch: {
     message(value) {
+      this.message = value.replace("<br/>", "\n");
       if (value.charAt(0) == "/") {
         const query = value.substring(1);
-        if (query) {
           this.loadingAutoText = true;
           this.$store.dispatch("SET_AUTO_TEXT", query).then(() => {
             this.loadingAutoText = false;
           });
-        } else {
-          this.$store.commit("REMOVE_AUTO_TEXT");
-        }
       } else {
         this.$store.commit("REMOVE_AUTO_TEXT");
       }

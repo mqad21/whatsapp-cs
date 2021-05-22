@@ -10,7 +10,7 @@
       </v-card-title>
       <v-card-text>
         <v-container>
-          <Area title="Daerah Asal" v-model="origin" />
+          <Area :is-store="true" title="Daerah Asal" v-model="origin" />
           <Area title="Daerah Tujuan" v-model="destination" />
           <v-row>
             <v-col>
@@ -63,7 +63,7 @@
 <script>
 import Area from "./Area";
 import couriers from "@/commons/couriers";
-import getData from "@/helpers/cekongkir_helpers";
+import { getData, getAddress } from "@/helpers/cekongkir_helpers";
 import PriceList from "./PriceList.vue";
 
 export default {
@@ -110,8 +110,10 @@ export default {
         data: formData,
       })
         .then((result) => {
-          if (result[0].costs.length) {
-            this.prices = result;
+          if (result.results[0].costs.length) {
+            this.prices = result.results;
+            this.origin.text = getAddress(result.origin_details);
+            this.destination.text = getAddress(result.destination_details);
             this.loading = false;
           } else {
             this.$store.dispatch("SET_SNACKBAR", {

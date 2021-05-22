@@ -1,9 +1,9 @@
 <template>
   <v-row class="header mt-4" align="center">
-    <v-col cols="8" class="pa-0">
+    <v-col class="pa-0">
       <Category />
     </v-col>
-    <v-col cols="4" class="pa-0">
+    <v-col cols="auto" class="pa-0">
       <v-row justify="end">
         <v-col cols="auto">
           <v-btn color="white" @click="$store.dispatch('TOGGLE_CATEGORY')">Tambah Kategori</v-btn>

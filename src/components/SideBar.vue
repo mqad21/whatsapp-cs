@@ -3,11 +3,10 @@
     <div class="sidebar__header">
       <v-list-item>
         <v-list-item-avatar class="mr-3">
-          <v-img src="https://thispersondoesnotexist.com/image" />
+          <v-img :src="$store.state.user.currentUser.profil" />
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title>John Doe</v-list-item-title>
-          <v-list-item-subtitle>Admin 1</v-list-item-subtitle>
+          <v-list-item-title>{{$store.state.user.currentUser.name}}</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </div>

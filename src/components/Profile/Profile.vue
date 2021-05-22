@@ -13,12 +13,13 @@
         v-if="$store.state.profile.editable"
         cols="auto"
       >
-        <v-row align="center">
-          <v-col class="pr-0">
-            <v-text-field v-model="name" />
+        <v-row justify="center" align="center">
+          <v-col cols="12" class="px-lg-10">
+            <v-text-field v-model="name" hide-details />
           </v-col>
-          <v-col cols="auto" class="pl-0">
+          <v-col cols="12" class="px-lg-10 pt-0">
             <v-btn
+              block
               @click="
                 $store.dispatch('CHANGE_NAME', {
                   name,
@@ -47,12 +48,12 @@
           </v-icon>
         </p>
       </v-col>
-      <v-col cols="12" class="pa-0">
+      <v-col cols="12" class="px-lg-10">
         <p class="text-caption text-center mb-0" v-if="currentChat.note.length">
           Note: {{ currentChat.note.join(" | ") }}
         </p>
       </v-col>
-      <v-col cols="8">
+      <v-col cols="12" class="px-lg-10">
         <v-select
           label="Pilih Kategori"
           hide-details
@@ -61,13 +62,20 @@
         >
         </v-select>
       </v-col>
-      <v-col cols="8">
-        <v-btn color="success" block @click="$store.commit('TOGGLE_TRANSFER')">
+      <v-col cols="12" class="px-lg-10">
+        <v-btn
+          small
+          color="success"
+          block
+          @click="$store.commit('TOGGLE_TRANSFER')"
+        >
           Transfer
         </v-btn>
       </v-col>
-      <v-col cols="8">
-        <v-btn color="primary" block @click="endChat"> Selesai Chat </v-btn>
+      <v-col cols="12" class="px-lg-10">
+        <v-btn small color="primary" block @click="endChat">
+          Selesai Chat
+        </v-btn>
       </v-col>
     </v-row>
     <transfer />
