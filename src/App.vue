@@ -24,6 +24,8 @@ export default Vue.extend({
         };
         this.$store.commit("UPDATE_CHAT_MESSAGES", newMessage);
       }
+      this.$store.dispatch("SET_ACTIVE_CHAT_USERS");
+      this.$store.dispatch("SET_PENDING_CHAT_USERS");
     });
   },
 });

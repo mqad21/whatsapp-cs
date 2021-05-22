@@ -5,4 +5,5 @@ export interface ShortUser {
   name: string;
   number: string;
   note: Array<any>;
+  unread: string;
 }

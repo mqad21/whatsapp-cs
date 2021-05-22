@@ -22,8 +22,16 @@ export default {
     SET_PENDING_CHAT_USERS(state: { pendingChatUsers: [] }, payload: []) {
       state.pendingChatUsers = payload.reverse() as any;
     },
-    SET_CURRENT_CHAT(state: { currentChat: ShortUser }, payload: ShortUser) {
+    SET_CURRENT_CHAT(state: { currentChat: ShortUser; activeChatUsers: []; pendingChatUsers: [] }, payload: ShortUser) {
       state.currentChat = payload;
+      const activeUser = state.activeChatUsers.find(function (user: any) {
+        return user.id == payload.id;
+      }) as any;
+      if (activeUser) activeUser.unread = '0';
+      const pendingUser = state.pendingChatUsers.find(function (user: any) {
+        return user.id == payload.id;
+      }) as any;
+      if (pendingUser) pendingUser.unread = '0';
     },
     SET_CHAT_MESSAGES(
       state: { chatMessages: []; currentNumber: string },

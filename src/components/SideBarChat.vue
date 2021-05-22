@@ -15,15 +15,21 @@
         </v-row>
       </v-col>
       <v-col cols="auto">
-        <v-row v-if="pending">
+        <v-row>
           <v-col>
             <v-btn
+              v-if="pending"
               @click.stop="$store.dispatch('ACCEPT_CHAT', user)"
               small
               color="primary"
             >
               Terima
             </v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-badge v-if="user.unread != 0" color="success" inline :content="user.unread"></v-badge>
           </v-col>
         </v-row>
       </v-col>
