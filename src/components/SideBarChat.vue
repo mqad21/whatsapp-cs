@@ -4,7 +4,7 @@
       <v-col cols="auto">
         <v-avatar icon><v-img :src="user.profile"></v-img></v-avatar>
       </v-col>
-      <v-col class="pl-0 sidebar__chat_info">
+      <v-col :cols="pending ? 6 : 8" class="pl-0 sidebar__chat_info">
         <v-row justify="space-between">
           <v-col>
             <h2>{{ user.name }}</h2>
@@ -16,7 +16,7 @@
       </v-col>
       <v-col cols="auto">
         <v-row>
-          <v-col>
+          <v-col cols="auto">
             <v-btn
               v-if="pending"
               @click.stop="$store.dispatch('ACCEPT_CHAT', user)"

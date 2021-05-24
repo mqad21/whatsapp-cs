@@ -15,7 +15,7 @@
       >
         <v-row justify="center" align="center">
           <v-col cols="12" class="px-lg-10">
-            <v-text-field v-model="name" hide-details/>
+            <v-text-field v-model="name" hide-details />
           </v-col>
           <v-col cols="12" class="px-lg-10 pt-0">
             <v-btn
@@ -83,7 +83,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import Transfer from "./Transfer.vue";
 
 export default {
@@ -95,7 +94,9 @@ export default {
     };
   },
   computed: {
-    ...mapState({ currentChat: (state) => state.chat.currentChat }),
+    currentChat() {
+      return this.$store.state.chat.currentChat;
+    },
     categories() {
       return this.$store.state.category.categories.map((item) => {
         return {

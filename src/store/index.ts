@@ -6,6 +6,7 @@ import chat from "./modules/chat";
 import ongkir from "./modules/ongkir";
 import category from "./modules/category";
 import profile from "./modules/profile";
+import order from "./modules/order";
 
 Vue.use(Vuex);
 
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     chat,
     ongkir,
     category,
-    profile
+    profile,
+    order
   },
 });

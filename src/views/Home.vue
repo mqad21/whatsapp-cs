@@ -4,6 +4,7 @@
       <Snackbar />
       <CekOngkir />
       <AddCategory />
+      <InputOrder />
       <Header />
       <v-dialog
         max-width="80vw"
@@ -29,6 +30,7 @@ import SideBar from "@/components/SideBar.vue";
 import Profile from "@/components/Profile/Profile.vue";
 import CekOngkir from "@/components/CekOngkir/CekOngkir.vue";
 import AddCategory from "@/components/Category/AddCategory.vue";
+import InputOrder from "@/components/Order/InputOrder.vue";
 import Chat from "@/components/Chat/Chat.vue";
 import Login from "@/components/Auth/Auth.vue";
 import { mapState } from "vuex";
@@ -48,6 +50,7 @@ export default Vue.extend({
     Snackbar,
     CekOngkir,
     AddCategory,
+    InputOrder,
   },
 });
 </script>
