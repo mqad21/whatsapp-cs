@@ -10,28 +10,9 @@
       </v-card-title>
       <v-card-text>
         <v-container>
-          <v-row>
+          <v-row v-for="(value, key) in $store.state.order.data" :key="key">
             <v-col>
-              <v-text-field
-                label="Nama"
-                v-model="$store.state.order.data.nama"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-text-field
-                label="Alamat"
-                v-model="$store.state.order.data.alamat"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <v-text-field
-                label="Produk"
-                v-model="$store.state.order.data.produk"
-              />
+              <v-text-field :label="key" v-model="$store.state.order.data[key]" />
             </v-col>
           </v-row>
         </v-container>

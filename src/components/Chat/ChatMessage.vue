@@ -52,14 +52,12 @@ export default {
     form() {
       const form = {};
       const textLine = this.message.body.split(/\r?\n/);
-      console.log(textLine);
       textLine.forEach((text) => {
         const data = this.getData(text);
         if (data) {
           form[data[0]] = data[1];
         }
       });
-
       return form;
     },
   },
@@ -74,12 +72,10 @@ export default {
       this.$store.commit("TOGGLE_ORDER", this.form);
     },
     getData(text) {
-      const label = this.label.filter((label) =>
-        text.toLowerCase().includes(label)
-      );
-      if (!label) return null;
-      const regex = new RegExp(label + " ?: ?", "i");
-      return [label, text.replace(regex, "")];
+      if (!text.includes(":")) return null;
+      const label = text.substr(0, text.indexOf(":")).trim();
+      const value = text.substr(text.indexOf(":") + 1).trim();
+      return [label, value];
     },
   },
 };
